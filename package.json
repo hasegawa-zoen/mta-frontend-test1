@@ -1,0 +1,25 @@
+{
+  "name": "mta-frontend",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "build": "next build"
+  },
+  "dependencies": {
+    "@hasegawa-zoen/api-client": "^0.5.0",
+    "@hasegawa-zoen/ui-kit": "^0.3.0",
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^15.0.0",
+    "typescript": "^5.5.0"
+  }
+}

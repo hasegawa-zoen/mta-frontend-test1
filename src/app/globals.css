@@ -1,0 +1,3 @@
+/* Tenant-specific overrides beyond @hasegawa-zoen/ui-kit's tokens.css go here.
+ * Accent color itself is set inline on <html> in layout.tsx from
+ * tenant.config.json, so it stays in sync with that single source of truth. */

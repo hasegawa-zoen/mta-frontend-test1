@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: ["feature/**"]
+  pull_request:
+    branches: ["develop"]
+
+permissions:
+  contents: read
+
+jobs:
+  install-lint-typecheck-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm ci
+        env:
+          # GITHUB_TOKEN can't read packages published under a different
+          # repo (mta-ui-kit) even within the same org -- confirmed
+          # empirically, same cross-repo limitation as the old git checkout
+          # approach, just on the Packages API instead. NODE_AUTH_TOKEN is
+          # an org-level Actions secret: a classic PAT scoped to
+          # read:packages only.
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_MTA_API_BASE_URL: https://amrbtcw0wb.execute-api.ap-northeast-1.amazonaws.com
+          NEXT_PUBLIC_MTA_COGNITO_USER_POOL_ID: ap-northeast-1_aklMnDfVK
+          NEXT_PUBLIC_MTA_COGNITO_APP_CLIENT_ID: d8ug6kc7sesmbig3qlaibuk9j
+
+  sidebar-convention-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fail if a Sidebar nav item is passed an icon prop
+        run: |
+          if grep -rE '<SidebarNavItem[^>]*\bicon=' src/ 2>/dev/null; then
+            echo "Sidebar navigation items must not carry icons (root CLAUDE.md convention)" >&2
+            exit 1
+          fi
+          echo "no violation found"
